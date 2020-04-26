@@ -1,3 +1,27 @@
+
+
+map <localleader>r :call AgdaReload()<CR> 
+
+function! AgdaReload()
+    let current_buf=bufname('%')
+    let filename = expand("%:p")
+    let filename_vim = expand("%:p:h") . "/." . expand("%:t") . ".vim"
+
+    echo "Running .... using vim syntax: " . filename_vim
+
+    call asyncrun#run("", {}, "agda " . filename . " && agda --vim " . filename)
+
+    if filereadable(filename_vim)
+        exec "source " . filename_vim
+    endif 
+
+    exec "copen"
+
+    "return to buffer
+    exec bufwinnr(current_buf) . 'wincmd w'
+endfunction
+
+
 " Combining marks
 imap <buffer> <LocalLeader>over`  ̀
 imap <buffer> <LocalLeader>over'  ́
